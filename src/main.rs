@@ -1,5 +1,7 @@
 extern crate framebuffer;
 
+mod math;
+
 use std::thread;
 use std::time::Duration;
 
@@ -8,6 +10,7 @@ use framebuffer::{KdMode, Framebuffer};
 fn main() {
     let mut canvas = Canvas::new();
     canvas.line((100, 100), (150, 100));
+    canvas.line((100, 200), (500, 500));
     canvas.draw();
 
     let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();
@@ -41,11 +44,12 @@ impl Canvas {
         }
     }
 
-    // only horizontal lines
     fn line(&mut self, from: Point, to: Point) {
         let color = (255, 255, 0);
+        let (m, b) = math::solve_linear_eq(from, to);
         for x in from.0..to.0 {
-            let start = (to.1 * self.line_length + x) as usize;
+            let y = (m * x as f64 + b) as u32;
+            let start = (y * self.line_length + x) as usize;
             self.frame[start]  = color.0;
             self.frame[start + 1]  = color.1;
             self.frame[start + 2]  = color.2;
