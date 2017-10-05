@@ -28,6 +28,7 @@ struct Canvas {
     height: u32,
     line_length: u32,
     frame: Vec<u8>,
+    curr_color: (u8, u8, u8),
 }
 
 impl Canvas {
@@ -41,18 +42,18 @@ impl Canvas {
             frame: vec![0; (line_length * height) as usize],
             line_length,
             fb,
+            curr_color: (255, 255, 255),
         }
     }
 
     fn line(&mut self, from: Point, to: Point) {
-        let color = (255, 255, 0);
         let (m, b) = math::solve_linear_eq(from, to);
         for x in from.0..to.0 {
             let y = (m * x as f64 + b) as u32;
             let start = (y * self.line_length + x) as usize;
-            self.frame[start]  = color.0;
-            self.frame[start + 1]  = color.1;
-            self.frame[start + 2]  = color.2;
+            self.frame[start]  = self.curr_color.0;
+            self.frame[start + 1]  = self.curr_color.1;
+            self.frame[start + 2]  = self.curr_color.2;
         }
     }
 
