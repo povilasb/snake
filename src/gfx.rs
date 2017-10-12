@@ -47,6 +47,7 @@ impl Canvas {
         }
     }
 
+    /// Draws a filled rect.
     pub fn rect(&mut self, left_top: Point, right_bottom: Point) {
         for y in left_top.1..right_bottom.1 {
             for x in left_top.0..right_bottom.0 {
