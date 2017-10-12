@@ -7,10 +7,8 @@ mod gfx;
 
 fn main() {
     let mut canvas = gfx::Canvas::new();
-    canvas.line((100, 100), (150, 100));
-    canvas.line((100, 200), (500, 500));
-    canvas.color(255, 0, 0);
-    canvas.rect((500, 0), (550, 50));
+    canvas.sprite_to(500, 200, gfx::Sprite::head());
+    canvas.sprite_to(525, 200, gfx::Sprite::body());
     canvas.draw();
 
     let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();

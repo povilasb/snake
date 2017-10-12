@@ -62,7 +62,69 @@ impl Canvas {
         self.frame[start + 2]  = self.curr_color.0;
     }
 
+    /// Draw sprite to the frame.
+    pub fn sprite_to(&mut self, x: u32, y: u32, img: Sprite) {
+        let mut start = (y * self.line_length + x * 4) as usize;
+        for line in img.data {
+            self.frame[start..start + line.len()].copy_from_slice(&line);
+            start += self.line_length as usize;
+        }
+    }
+
     pub fn draw(&mut self) {
         self.fb.write_frame(&self.frame);
+    }
+}
+
+pub struct Sprite {
+    data: Vec<Vec<u8>>,
+}
+
+impl Sprite {
+    pub fn cell(color: (u8, u8, u8)) -> Sprite {
+        let mut data = Vec::<Vec<u8>>::new();
+        for _ in 0..25 {
+            let mut line = Vec::<u8>::new();
+            for _ in 0..25 {
+                line.push(color.0);
+                line.push(color.1);
+                line.push(color.2);
+                line.push(0);
+            }
+            data.push(line);
+        }
+
+        Sprite {
+            data
+        }
+    }
+
+    pub fn head() -> Sprite {
+        let mut sprite = Sprite::cell((0, 255, 255));
+        let rgb = (0, 0, 255);
+        for y in 5..9 {
+            sprite.point(20, y, &rgb);
+            sprite.point(24, y, &rgb);
+            sprite.point(28, y, &rgb);
+            sprite.point(32, y, &rgb);
+        }
+        for y in 17..21 {
+            sprite.point(20, y, &rgb);
+            sprite.point(24, y, &rgb);
+            sprite.point(28, y, &rgb);
+            sprite.point(32, y, &rgb);
+        }
+        sprite
+    }
+
+    pub fn body() -> Sprite {
+        Sprite::cell((0, 255, 0))
+    }
+
+    fn point(&mut self, x: usize, y: usize, color: &(u8, u8, u8)) {
+        self.data[y][x] = color.2;
+        self.data[y][x + 1] = color.1;
+        self.data[y][x + 2] = color.0;
+        self.data[y][x + 3] = 0;
     }
 }
