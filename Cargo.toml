@@ -5,3 +5,6 @@ authors = ["Povilas Balciunas <balciunas90@gmail.com>"]
 
 [dependencies]
 framebuffer = "0.1.6"
+
+[dev-dependencies]
+hamcrest = "0.1.3"

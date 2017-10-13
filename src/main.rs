@@ -1,17 +1,29 @@
 extern crate framebuffer;
 use framebuffer::{KdMode, Framebuffer};
 
+#[cfg(test)] #[macro_use] extern crate hamcrest;
+
+use std::{thread, time};
+
 mod math;
 mod gfx;
 mod game;
 
+use game::MovementDirection;
+
 
 fn main() {
+    let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();
+
     let mut plane = game::Plane::new(32, 24);
     let mut game_screen = GameScreen::new();
     game_screen.draw(&plane);
 
-    let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();
+    thread::sleep(time::Duration::from_secs(2));
+
+    plane.move_to(MovementDirection::Down);
+    game_screen.draw(&plane);
+
     // TODO: Make variable that on destruction gets back to text mode
     let _ = std::io::stdin().read_line(&mut String::new());
     let _ = Framebuffer::set_kd_mode(KdMode::Text).unwrap();
