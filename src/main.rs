@@ -41,6 +41,7 @@ impl GameScreen {
     }
 
     fn draw(&mut self, plane: &game::Plane) {
+        self.canvas.clear();
         self.draw_arena();
         let (x, y) = self.arena.location;
         let head = &plane.snake[0];

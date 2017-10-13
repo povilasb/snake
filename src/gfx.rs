@@ -1,5 +1,7 @@
 /// Graphics utils
 
+use std::ptr;
+
 use framebuffer::Framebuffer;
 
 use math;
@@ -82,6 +84,13 @@ impl Canvas {
 
     pub fn draw(&mut self) {
         self.fb.write_frame(&self.frame);
+    }
+
+    pub fn clear(&mut self) {
+        unsafe {
+            ptr::write_bytes(self.frame.as_mut_ptr(), 0,
+                             (self.line_length * self.height) as usize);
+        }
     }
 }
 
