@@ -47,6 +47,14 @@ impl Canvas {
         }
     }
 
+    /// Draws vertical line.
+    /// from and to x values must match.
+    pub fn vline(&mut self, from: Point, to: Point) {
+        for y in from.1..to.1 {
+            self.point(from.0, y);
+        }
+    }
+
     /// Draws a filled rect.
     pub fn rect(&mut self, left_top: Point, right_bottom: Point) {
         for y in left_top.1..right_bottom.1 {
