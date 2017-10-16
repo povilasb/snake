@@ -55,6 +55,11 @@ impl GameScreen {
     fn draw(&mut self, plane: &game::Plane) {
         self.canvas.clear();
         self.draw_arena();
+        self.draw_snake(plane);
+        self.canvas.draw();
+    }
+
+    fn draw_snake(&mut self, plane: &game::Plane) {
         let (x, y) = self.arena.location;
         let head = &plane.snake[0];
         self.canvas.sprite_to(
@@ -69,7 +74,6 @@ impl GameScreen {
                 gfx::Sprite::body()
             );
         }
-        self.canvas.draw();
     }
 
     fn draw_arena(&mut self) {
