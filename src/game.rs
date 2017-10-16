@@ -1,6 +1,4 @@
 use std::clone::Clone;
-use std::cmp::PartialEq;
-use std::fmt::Debug;
 
 #[derive(Clone, PartialEq, Debug)]
 pub enum MovementDirection {
