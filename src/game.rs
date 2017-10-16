@@ -1,4 +1,5 @@
 use std::clone::Clone;
+use std::cmp::Ordering;
 
 #[derive(Clone, PartialEq, Debug)]
 pub enum MovementDirection {
@@ -44,14 +45,43 @@ impl Plane {
         for i in (1..self.snake.len()).rev() {
             self.snake[i] = self.snake[i - 1].clone();
         }
-        // TODO: check over/underflow.
         match *direction {
-            MovementDirection::Left => self.snake[0].x -= 1,
-            MovementDirection::Right => self.snake[0].x += 1,
-            MovementDirection::Up => self.snake[0].y -= 1,
-            MovementDirection::Down => self.snake[0].y += 1,
+            MovementDirection::Left => self.move_left(),
+            MovementDirection::Right => self.move_right(),
+            MovementDirection::Up => self.move_up(),
+            MovementDirection::Down => self.move_down(),
         };
         self.snake[0].direction = direction.clone();
+    }
+
+    fn move_left(&mut self) {
+        self.snake[0].x = match self.snake[0].x {
+            0 => self.width - 1,
+            x => x - 1,
+        };
+    }
+
+    fn move_right(&mut self) {
+        self.snake[0].x = if self.snake[0].x >= self.width - 1 {
+            0
+        } else {
+            self.snake[0].x + 1
+        };
+    }
+
+    fn move_up(&mut self) {
+        self.snake[0].y = match self.snake[0].y {
+            0 => self.height - 1,
+            y => y - 1,
+        };
+    }
+
+    fn move_down(&mut self) {
+        self.snake[0].y = if self.snake[0].y >= self.height - 1 {
+            0
+        } else {
+            self.snake[0].y + 1
+        };
     }
 }
 
