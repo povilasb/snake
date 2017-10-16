@@ -1,9 +1,15 @@
+use std::{thread, time, io};
+use std::io::Read;
+
 extern crate framebuffer;
 use framebuffer::{KdMode, Framebuffer};
+extern crate termion;
+use termion::input::TermRead;
+use termion::raw::IntoRawMode;
+use termion::event::Key;
+use termion::async_stdin;
 
 #[cfg(test)] #[macro_use] extern crate hamcrest;
-
-use std::{thread, time};
 
 mod math;
 mod gfx;
@@ -11,30 +17,40 @@ mod game;
 
 use game::MovementDirection;
 
-
 fn main() {
     let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();
 
+    // This also puts stdin to raw mode which allows to get unbuffered key
+    // presses.
+    let stdout = io::stdout();
+    let stdout = stdout.lock().into_raw_mode().unwrap();
+
     let mut plane = game::Plane::new(32, 24);
     let mut game_screen = GameScreen::new();
+    let mut stdin = async_stdin();
 
-    let delay = time::Duration::from_millis(200);
+    let delay = time::Duration::from_millis(150);
+    let mut key_bytes = [0];
+
     let mut direction = MovementDirection::Down;
-    let mut counter = 0;
     loop {
-        game_screen.draw(&plane);
-
-        plane.move_to(&direction);
-
-        thread::sleep(delay);
-        counter += 1;
-        if counter >= 10 {
+        stdin.read(&mut key_bytes).unwrap();
+        match key_bytes[0] {
+            b'l' => direction = MovementDirection::Right,
+            b'h' => direction = MovementDirection::Left,
+            b'k' => direction = MovementDirection::Up,
+            b'j' => direction = MovementDirection::Down,
+            _ => (),
+        };
+        if key_bytes[0] == b'q' {
             break;
         }
+        plane.move_to(&direction);
+
+        game_screen.draw(&plane);
+        thread::sleep(delay);
     }
 
-    // TODO: Make variable that on destruction gets back to text mode
-    let _ = std::io::stdin().read_line(&mut String::new());
     let _ = Framebuffer::set_kd_mode(KdMode::Text).unwrap();
 }
 
