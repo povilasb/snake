@@ -40,18 +40,18 @@ impl Plane {
         }
     }
 
-    pub fn move_to(&mut self, direction: MovementDirection) {
+    pub fn move_to(&mut self, direction: &MovementDirection) {
         for i in (1..self.snake.len()).rev() {
             self.snake[i] = self.snake[i - 1].clone();
         }
         // TODO: check over/underflow.
-        match direction {
+        match *direction {
             MovementDirection::Left => self.snake[0].x -= 1,
             MovementDirection::Right => self.snake[0].x += 1,
             MovementDirection::Up => self.snake[0].y -= 1,
             MovementDirection::Down => self.snake[0].y += 1,
         };
-        self.snake[0].direction = direction;
+        self.snake[0].direction = direction.clone();
     }
 }
 

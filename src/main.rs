@@ -17,12 +17,21 @@ fn main() {
 
     let mut plane = game::Plane::new(32, 24);
     let mut game_screen = GameScreen::new();
-    game_screen.draw(&plane);
 
-    thread::sleep(time::Duration::from_secs(2));
+    let delay = time::Duration::from_millis(200);
+    let mut direction = MovementDirection::Down;
+    let mut counter = 0;
+    loop {
+        game_screen.draw(&plane);
 
-    plane.move_to(MovementDirection::Down);
-    game_screen.draw(&plane);
+        plane.move_to(&direction);
+
+        thread::sleep(delay);
+        counter += 1;
+        if counter >= 10 {
+            break;
+        }
+    }
 
     // TODO: Make variable that on destruction gets back to text mode
     let _ = std::io::stdin().read_line(&mut String::new());
