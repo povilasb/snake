@@ -74,9 +74,9 @@ impl Canvas {
     }
 
     /// Draw sprite to the frame.
-    pub fn sprite_to(&mut self, x: u32, y: u32, img: Sprite) {
+    pub fn sprite_to(&mut self, x: u32, y: u32, img: &Sprite) {
         let mut start = (y * self.line_length + x * 4) as usize;
-        for line in img.data {
+        for line in &img.data {
             self.frame[start..start + line.len()].copy_from_slice(&line);
             start += self.line_length as usize;
         }
@@ -96,14 +96,16 @@ impl Canvas {
 
 pub struct Sprite {
     data: Vec<Vec<u8>>,
+    width: usize,
 }
 
 impl Sprite {
     pub fn cell(color: (u8, u8, u8)) -> Sprite {
         let mut data = Vec::<Vec<u8>>::new();
+        let width = 25;
         for _ in 0..25 {
             let mut line = Vec::<u8>::new();
-            for _ in 0..25 {
+            for _ in 0..width {
                 line.push(color.0);
                 line.push(color.1);
                 line.push(color.2);
@@ -113,11 +115,12 @@ impl Sprite {
         }
 
         Sprite {
-            data
+            data,
+            width
         }
     }
 
-    pub fn head() -> Sprite {
+    pub fn head_left() -> Sprite {
         let mut sprite = Sprite::cell((0, 255, 255));
         let rgb = (0, 0, 255);
         for y in 5..9 {
@@ -131,6 +134,61 @@ impl Sprite {
             sprite.point(24, y, &rgb);
             sprite.point(28, y, &rgb);
             sprite.point(32, y, &rgb);
+        }
+        sprite
+    }
+
+    pub fn head_right() -> Sprite {
+        let mut sprite = Sprite::cell((0, 255, 255));
+        let rgb = (0, 0, 255);
+        let left_off = (sprite.width - sprite.width / 5  - 4) * 4;
+        for y in 5..9 {
+            sprite.point(left_off, y, &rgb);
+            sprite.point(left_off + 4, y, &rgb);
+            sprite.point(left_off + 8, y, &rgb);
+            sprite.point(left_off + 12, y, &rgb);
+        }
+        for y in 17..21 {
+            sprite.point(left_off, y, &rgb);
+            sprite.point(left_off + 4, y, &rgb);
+            sprite.point(left_off + 8, y, &rgb);
+            sprite.point(left_off + 12, y, &rgb);
+        }
+        sprite
+    }
+
+    pub fn head_up() -> Sprite {
+        let mut sprite = Sprite::cell((0, 255, 255));
+        let rgb = (0, 0, 255);
+        let xoff = 20;
+        let xoff2 = (sprite.width - sprite.width / 5  - 4) * 4;
+        for y in 5..9 {
+            sprite.point(xoff, y, &rgb);
+            sprite.point(xoff + 4, y, &rgb);
+            sprite.point(xoff + 8, y, &rgb);
+            sprite.point(xoff + 12, y, &rgb);
+            sprite.point(xoff2, y, &rgb);
+            sprite.point(xoff2 + 4, y, &rgb);
+            sprite.point(xoff2 + 8, y, &rgb);
+            sprite.point(xoff2 + 12, y, &rgb);
+        }
+        sprite
+    }
+
+    pub fn head_down() -> Sprite {
+        let mut sprite = Sprite::cell((0, 255, 255));
+        let rgb = (0, 0, 255);
+        let xoff = 20;
+        let xoff2 = (sprite.width - sprite.width / 5  - 4) * 4;
+        for y in sprite.width - 8..sprite.width - 4 {
+            sprite.point(xoff, y, &rgb);
+            sprite.point(xoff + 4, y, &rgb);
+            sprite.point(xoff + 8, y, &rgb);
+            sprite.point(xoff + 12, y, &rgb);
+            sprite.point(xoff2, y, &rgb);
+            sprite.point(xoff2 + 4, y, &rgb);
+            sprite.point(xoff2 + 8, y, &rgb);
+            sprite.point(xoff2 + 12, y, &rgb);
         }
         sprite
     }

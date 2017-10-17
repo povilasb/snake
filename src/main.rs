@@ -1,5 +1,6 @@
 use std::{thread, time, io};
 use std::io::Read;
+use std::collections::HashMap;
 
 extern crate framebuffer;
 use framebuffer::{KdMode, Framebuffer};
@@ -63,17 +64,24 @@ struct GameScreen {
     arena: PlayableArea,
     canvas: gfx::Canvas,
     cell_size: (u32, u32),
+    head_sprites: HashMap<MovementDirection, gfx::Sprite>,
 }
 
 impl GameScreen {
     fn new() -> GameScreen {
+        let mut head_sprites = HashMap::new();
+        head_sprites.insert(MovementDirection::Left, gfx::Sprite::head_left());
+        head_sprites.insert(MovementDirection::Right, gfx::Sprite::head_right());
+        head_sprites.insert(MovementDirection::Up, gfx::Sprite::head_up());
+        head_sprites.insert(MovementDirection::Down, gfx::Sprite::head_down());
         GameScreen {
             arena: PlayableArea {
                 size: (800, 600),
                 location: (0, 0),
             },
             canvas: gfx::Canvas::new(),
-            cell_size: (25, 25)
+            cell_size: (25, 25),
+            head_sprites,
         }
     }
 
@@ -90,13 +98,13 @@ impl GameScreen {
         self.canvas.sprite_to(
             x + self.cell_size.0 * head.x as u32,
             y + self.cell_size.1 * head.y as u32,
-            gfx::Sprite::head()
+            self.head_sprites.get(&head.direction).unwrap(),
         );
         for cell in plane.snake.iter().skip(1) {
             self.canvas.sprite_to(
                 x + self.cell_size.0 * cell.x as u32,
                 y + self.cell_size.1 * cell.y as u32,
-                gfx::Sprite::body()
+                &gfx::Sprite::body()
             );
         }
     }

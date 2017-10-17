@@ -1,7 +1,7 @@
 use std::clone::Clone;
 use std::cmp::Ordering;
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, Hash, Eq)]
 pub enum MovementDirection {
     Left,
     Right,
@@ -13,7 +13,7 @@ pub enum MovementDirection {
 pub struct Cell {
     pub x: usize,
     pub y: usize,
-    direction: MovementDirection,
+    pub direction: MovementDirection,
 }
 
 impl Cell {
