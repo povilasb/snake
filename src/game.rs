@@ -99,7 +99,7 @@ mod tests {
             fn it_shifts_body_parts_right() {
                 let mut plane = Plane::new(20, 20);
 
-                plane.move_to(MovementDirection::Right);
+                plane.move_to(&MovementDirection::Right);
 
                 assert_that!(plane.snake[1].x, is(equal_to(2)));
                 assert_that!(plane.snake[1].y, is(equal_to(0)));
@@ -111,7 +111,7 @@ mod tests {
             fn it_increases_head_x_when_direction_is_right() {
                 let mut plane = Plane::new(20, 20);
 
-                plane.move_to(MovementDirection::Right);
+                plane.move_to(&MovementDirection::Right);
 
                 assert_that!(plane.snake[0].x, is(equal_to(3)));
                 assert_that!(plane.snake[0].y, is(equal_to(0)));
@@ -121,7 +121,7 @@ mod tests {
             fn it_decreases_head_x_when_direction_is_left() {
                 let mut plane = Plane::new(20, 20);
 
-                plane.move_to(MovementDirection::Left);
+                plane.move_to(&MovementDirection::Left);
 
                 assert_that!(plane.snake[0].x, is(equal_to(1)));
                 assert_that!(plane.snake[0].y, is(equal_to(0)));
@@ -131,7 +131,7 @@ mod tests {
             fn it_updates_head_direction_with_the_specified_one() {
                 let mut plane = Plane::new(20, 20);
 
-                plane.move_to(MovementDirection::Down);
+                plane.move_to(&MovementDirection::Down);
 
                 assert_that!(&plane.snake[0].direction,
                              is(equal_to(&MovementDirection::Down)));
