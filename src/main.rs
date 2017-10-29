@@ -72,6 +72,7 @@ struct GameScreen {
 }
 
 impl GameScreen {
+    // TODO:; pass game plane as function argument.
     fn new() -> GameScreen {
         let mut head_sprites = HashMap::new();
         head_sprites.insert(MovementDirection::Left, gfx::Sprite::head_left());
@@ -93,6 +94,7 @@ impl GameScreen {
         self.canvas.clear();
         self.draw_arena();
         self.draw_snake(plane);
+        self.draw_food(plane);
         self.canvas.draw();
     }
 
@@ -111,6 +113,15 @@ impl GameScreen {
                 &gfx::Sprite::body(),
             );
         }
+    }
+
+    fn draw_food(&mut self, plane: &game::Plane) {
+        let (x, y) = self.arena.location;
+        self.canvas.sprite_to(
+            x + self.cell_size.0 * plane.food.x as u32,
+            y + self.cell_size.1 * plane.food.y as u32,
+            &gfx::Sprite::body(),
+        );
     }
 
     fn draw_arena(&mut self) {
