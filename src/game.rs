@@ -1,5 +1,7 @@
 use std::clone::Clone;
 
+use rand::{thread_rng, Rng};
+
 #[derive(Clone, PartialEq, Debug, Hash, Eq)]
 pub enum MovementDirection {
     Left,
@@ -19,12 +21,28 @@ impl Cell {
     fn new(x: usize, y: usize, direction: MovementDirection) -> Cell {
         Cell { x, y, direction }
     }
+
+    /// Generates new cell with random pozition within given ranges.
+    ///
+    /// Direction is undefined.
+    pub fn random(max_x: usize, max_y: usize) -> Cell {
+        let mut rng = thread_rng();
+        Cell {
+            x: rng.gen_range(0, max_x + 1),
+            y: rng.gen_range(0, max_y + 1),
+            direction: MovementDirection::Right,
+        }
+    }
 }
 
+/// Limited space game plane.
+///
+/// It's where snake and it's food exist.
 pub struct Plane {
     width: usize,
     height: usize,
     pub snake: Vec<Cell>,
+    pub food: Cell,
 }
 
 impl Plane {
@@ -33,11 +51,15 @@ impl Plane {
         let body2 = Cell::new(1, 0, MovementDirection::Right);
         let head = Cell::new(2, 0, MovementDirection::Right);
         let snake = vec![head, body2, body1];
-        Plane {
+
+        let mut plane = Plane {
             width,
             height,
             snake,
-        }
+            food: Cell::random(width - 1, height - 1),
+        };
+        plane.randomize_food();
+        plane
     }
 
     pub fn move_to(&mut self, direction: &MovementDirection) {
@@ -51,6 +73,18 @@ impl Plane {
             MovementDirection::Down => self.move_down(),
         };
         self.snake[0].direction = direction.clone();
+    }
+
+    /// Places food cell in a random location on a game plane.
+    pub fn randomize_food(&mut self) {
+        let mut on_snake = true;
+        while on_snake {
+            self.food = Cell::random(self.width - 1, self.height - 1);
+            on_snake = self.snake
+                .iter()
+                .map(|cell| (cell.x, cell.y))
+                .any(|coords| coords == (self.food.x, self.food.y));
+        }
     }
 
     fn move_left(&mut self) {
@@ -89,9 +123,23 @@ mod tests {
     use super::*;
     use hamcrest::*;
 
+    mod cell {
+        use super::*;
+        mod random {
+            use super::*;
+
+            #[test]
+            fn it_places_food_inside_plane() {
+                let cell = Cell::random(20 - 1, 20 - 1);
+
+                assert_that!(cell.x, is(less_than(20)));
+                assert_that!(cell.y, is(less_than(20)));
+            }
+        }
+    }
+
     mod plane {
         use super::*;
-
         mod move_to {
             use super::*;
 
@@ -136,6 +184,32 @@ mod tests {
                 assert_that!(
                     &plane.snake[0].direction,
                     is(equal_to(&MovementDirection::Down))
+                );
+            }
+        }
+
+        mod randomize_food {
+            use super::*;
+
+            #[test]
+            fn it_places_food_inside_plane() {
+                let mut plane = Plane::new(20, 20);
+
+                plane.randomize_food();
+
+                assert_that!(plane.food.x, is(less_than(20)));
+                assert_that!(plane.food.y, is(less_than(20)));
+            }
+
+            #[test]
+            fn it_picks_any_place_except_where_snake_is() {
+                let mut plane = Plane::new(20, 20);
+
+                plane.randomize_food();
+
+                assert_that!(
+                    &vec![(0, 0), (1, 0), (2, 0)],
+                    not(contains(vec![(plane.food.x, plane.food.y)]))
                 );
             }
         }

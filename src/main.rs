@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate unwrap;
+extern crate rand;
 
 use std::{thread, time, io};
 use std::io::Read;
