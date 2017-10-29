@@ -11,7 +11,7 @@ type Point = (u32, u32);
 
 /// Represents 2D drawing area.
 /// Draws directly to Linux framebuffer.
-/// See: https://www.kernel.org/doc/Documentation/fb/framebuffer.txt
+/// See: `https://www.kernel.org/doc/Documentation/fb/framebuffer.txt`
 pub struct Canvas {
     fb: Framebuffer,
     _width: u32,
@@ -44,7 +44,7 @@ impl Canvas {
     pub fn line(&mut self, from: Point, to: Point) {
         let (m, b) = math::solve_linear_eq(from, to);
         for x in from.0..to.0 {
-            let y = (m * x as f64 + b) as u32;
+            let y = (m * f64::from(x) + b) as u32;
             self.point(x, y);
         }
     }
@@ -78,7 +78,7 @@ impl Canvas {
     pub fn sprite_to(&mut self, x: u32, y: u32, img: &Sprite) {
         let mut start = (y * self.line_length + x * 4) as usize;
         for line in &img.data {
-            self.frame[start..start + line.len()].copy_from_slice(&line);
+            self.frame[start..start + line.len()].copy_from_slice(line);
             start += self.line_length as usize;
         }
     }
