@@ -68,9 +68,9 @@ impl Canvas {
 
     pub fn point(&mut self, x: u32, y: u32) {
         let start = (y * self.line_length + x * 4) as usize;
-        self.frame[start]  = self.curr_color.2;
-        self.frame[start + 1]  = self.curr_color.1;
-        self.frame[start + 2]  = self.curr_color.0;
+        self.frame[start] = self.curr_color.2;
+        self.frame[start + 1] = self.curr_color.1;
+        self.frame[start + 2] = self.curr_color.0;
     }
 
     /// Draw sprite to the frame.
@@ -88,8 +88,11 @@ impl Canvas {
 
     pub fn clear(&mut self) {
         unsafe {
-            ptr::write_bytes(self.frame.as_mut_ptr(), 0,
-                             (self.line_length * self.height) as usize);
+            ptr::write_bytes(
+                self.frame.as_mut_ptr(),
+                0,
+                (self.line_length * self.height) as usize,
+            );
         }
     }
 }
@@ -114,10 +117,7 @@ impl Sprite {
             data.push(line);
         }
 
-        Sprite {
-            data,
-            width
-        }
+        Sprite { data, width }
     }
 
     pub fn head_left() -> Sprite {
@@ -141,7 +141,7 @@ impl Sprite {
     pub fn head_right() -> Sprite {
         let mut sprite = Sprite::cell((0, 255, 255));
         let rgb = (0, 0, 255);
-        let left_off = (sprite.width - sprite.width / 5  - 4) * 4;
+        let left_off = (sprite.width - sprite.width / 5 - 4) * 4;
         for y in 5..9 {
             sprite.point(left_off, y, &rgb);
             sprite.point(left_off + 4, y, &rgb);
@@ -161,7 +161,7 @@ impl Sprite {
         let mut sprite = Sprite::cell((0, 255, 255));
         let rgb = (0, 0, 255);
         let xoff = 20;
-        let xoff2 = (sprite.width - sprite.width / 5  - 4) * 4;
+        let xoff2 = (sprite.width - sprite.width / 5 - 4) * 4;
         for y in 5..9 {
             sprite.point(xoff, y, &rgb);
             sprite.point(xoff + 4, y, &rgb);
@@ -179,7 +179,7 @@ impl Sprite {
         let mut sprite = Sprite::cell((0, 255, 255));
         let rgb = (0, 0, 255);
         let xoff = 20;
-        let xoff2 = (sprite.width - sprite.width / 5  - 4) * 4;
+        let xoff2 = (sprite.width - sprite.width / 5 - 4) * 4;
         for y in sprite.width - 8..sprite.width - 4 {
             sprite.point(xoff, y, &rgb);
             sprite.point(xoff + 4, y, &rgb);

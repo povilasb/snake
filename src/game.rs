@@ -16,7 +16,7 @@ pub struct Cell {
 }
 
 impl Cell {
-    fn new(x: usize, y: usize, direction: MovementDirection) -> Cell{
+    fn new(x: usize, y: usize, direction: MovementDirection) -> Cell {
         Cell { x, y, direction }
     }
 }
@@ -133,8 +133,10 @@ mod tests {
 
                 plane.move_to(&MovementDirection::Down);
 
-                assert_that!(&plane.snake[0].direction,
-                             is(equal_to(&MovementDirection::Down)));
+                assert_that!(
+                    &plane.snake[0].direction,
+                    is(equal_to(&MovementDirection::Down))
+                );
             }
         }
     }

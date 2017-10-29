@@ -11,7 +11,9 @@ extern crate termion;
 use termion::raw::IntoRawMode;
 use termion::async_stdin;
 
-#[cfg(test)] #[macro_use] extern crate hamcrest;
+#[cfg(test)]
+#[macro_use]
+extern crate hamcrest;
 
 mod math;
 mod gfx;
@@ -105,7 +107,7 @@ impl GameScreen {
             self.canvas.sprite_to(
                 x + self.cell_size.0 * cell.x as u32,
                 y + self.cell_size.1 * cell.y as u32,
-                &gfx::Sprite::body()
+                &gfx::Sprite::body(),
             );
         }
     }
