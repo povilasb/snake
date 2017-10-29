@@ -28,7 +28,8 @@ fn main() {
     // This also puts stdin to raw mode which allows to get unbuffered key
     // presses.
     let stdout = io::stdout();
-    unwrap!(stdout.lock().into_raw_mode());
+    // NOTE: if this variable is `_`, then raw mode is not turned on!
+    let _stdout = unwrap!(stdout.lock().into_raw_mode());
 
     let mut plane = game::Plane::new(32, 24);
     let mut game_screen = GameScreen::new();
