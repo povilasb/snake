@@ -1,5 +1,15 @@
 language: rust
+
 rust:
   - stable
   - nightly
+
 cache: cargo
+
+before_script:
+  - cargo install rustfmt --vers 0.9.0
+
+script:
+  - cargo fmt -- --write-mode=diff
+  - cargo build --verbose
+  - cargo test --verbose
