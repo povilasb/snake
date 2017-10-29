@@ -1,5 +1,4 @@
 use std::clone::Clone;
-use std::cmp::Ordering;
 
 #[derive(Clone, PartialEq, Debug, Hash, Eq)]
 pub enum MovementDirection {

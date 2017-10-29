@@ -5,9 +5,7 @@ use std::collections::HashMap;
 extern crate framebuffer;
 use framebuffer::{KdMode, Framebuffer};
 extern crate termion;
-use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use termion::event::Key;
 use termion::async_stdin;
 
 #[cfg(test)] #[macro_use] extern crate hamcrest;
