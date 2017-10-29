@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate unwrap;
+
 use std::{thread, time, io};
 use std::io::Read;
 use std::collections::HashMap;
@@ -17,12 +20,12 @@ mod game;
 use game::MovementDirection;
 
 fn main() {
-    let _ = Framebuffer::set_kd_mode(KdMode::Graphics).unwrap();
+    let _ = unwrap!(Framebuffer::set_kd_mode(KdMode::Graphics));
 
     // This also puts stdin to raw mode which allows to get unbuffered key
     // presses.
     let stdout = io::stdout();
-    let stdout = stdout.lock().into_raw_mode().unwrap();
+    unwrap!(stdout.lock().into_raw_mode());
 
     let mut plane = game::Plane::new(32, 24);
     let mut game_screen = GameScreen::new();
@@ -33,7 +36,7 @@ fn main() {
 
     let mut direction = MovementDirection::Down;
     loop {
-        stdin.read(&mut key_bytes).unwrap();
+        unwrap!(stdin.read(&mut key_bytes));
         match key_bytes[0] {
             b'l' => direction = MovementDirection::Right,
             b'h' => direction = MovementDirection::Left,
@@ -50,7 +53,7 @@ fn main() {
         thread::sleep(delay);
     }
 
-    let _ = Framebuffer::set_kd_mode(KdMode::Text).unwrap();
+    unwrap!(Framebuffer::set_kd_mode(KdMode::Text));
 }
 
 struct PlayableArea {
@@ -96,7 +99,7 @@ impl GameScreen {
         self.canvas.sprite_to(
             x + self.cell_size.0 * head.x as u32,
             y + self.cell_size.1 * head.y as u32,
-            self.head_sprites.get(&head.direction).unwrap(),
+            unwrap!(self.head_sprites.get(&head.direction)),
         );
         for cell in plane.snake.iter().skip(1) {
             self.canvas.sprite_to(

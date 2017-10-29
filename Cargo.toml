@@ -1,11 +1,12 @@
 [package]
+authors = ["Povilas Balciunas <balciunas90@gmail.com>"]
 name = "rust-gfx"
 version = "0.1.0"
-authors = ["Povilas Balciunas <balciunas90@gmail.com>"]
 
 [dependencies]
 framebuffer = "0.1.6"
 termion = "1.5.1"
+unwrap = "1.1.0"
 
 [dev-dependencies]
 hamcrest = "0.1.3"
