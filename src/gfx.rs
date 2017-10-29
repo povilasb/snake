@@ -14,7 +14,7 @@ type Point = (u32, u32);
 /// See: https://www.kernel.org/doc/Documentation/fb/framebuffer.txt
 pub struct Canvas {
     fb: Framebuffer,
-    width: u32,
+    _width: u32,
     height: u32,
     line_length: u32,
     frame: Vec<u8>,
@@ -27,7 +27,7 @@ impl Canvas {
         let line_length = fb.fix_screen_info.line_length;
         let height = fb.var_screen_info.yres;
         Canvas {
-            width: fb.var_screen_info.xres,
+            _width: fb.var_screen_info.xres,
             height,
             frame: vec![0; (line_length * height) as usize],
             line_length,
@@ -58,6 +58,7 @@ impl Canvas {
     }
 
     /// Draws a filled rect.
+    #[allow(dead_code)]
     pub fn rect(&mut self, left_top: Point, right_bottom: Point) {
         for y in left_top.1..right_bottom.1 {
             for x in left_top.0..right_bottom.0 {
