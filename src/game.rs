@@ -84,10 +84,11 @@ impl Plane {
         let mut on_snake = true;
         while on_snake {
             self.food = Cell::random(self.width - 1, self.height - 1);
-            on_snake = self.snake
-                .iter()
-                .map(|cell| (cell.x, cell.y))
-                .any(|coords| coords == (self.food.x, self.food.y));
+            on_snake = self.snake.iter().map(|cell| (cell.x, cell.y)).any(
+                |coords| {
+                    coords == (self.food.x, self.food.y)
+                },
+            );
         }
     }
 
