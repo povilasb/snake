@@ -8,7 +8,7 @@ cache: cargo
 
 before_script:
   - cargo install rustfmt --vers 0.9.0 --force
-  - cargo install clippy --vers 0.0.144 --force
+  - cargo install clippy --vers 0.0.166 --force
 
 script:
   - cargo fmt -- --write-mode=diff
