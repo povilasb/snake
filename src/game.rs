@@ -73,9 +73,15 @@ impl Plane {
             MovementDirection::Down => self.move_down(),
         };
         self.snake[0].direction = direction.clone();
+        if self.head_on_food() {
+            self.food.direction = self.snake[0].direction.clone();
+            self.snake.push(self.food.clone());
+            self.randomize_food();
+        }
     }
 
     /// Places food cell in a random location on a game plane.
+    // TODO: make it private?
     pub fn randomize_food(&mut self) {
         let mut on_snake = true;
         while on_snake {
@@ -85,6 +91,11 @@ impl Plane {
                 .map(|cell| (cell.x, cell.y))
                 .any(|coords| coords == (self.food.x, self.food.y));
         }
+    }
+
+    /// Tests snake head and food collision.
+    fn head_on_food(&self) -> bool {
+        self.snake[0].x == self.food.x && self.snake[0].y == self.food.y
     }
 
     fn move_left(&mut self) {
@@ -211,6 +222,28 @@ mod tests {
                     &vec![(0, 0), (1, 0), (2, 0)],
                     not(contains(vec![(plane.food.x, plane.food.y)]))
                 );
+            }
+        }
+
+        mod head_on_food {
+            use super::*;
+
+            #[test]
+            fn it_returns_true_when_snake_head_coordinates_match_food_coordinates() {
+                let mut plane = Plane::new(20, 20);
+                plane.food = Cell::new(5, 5, MovementDirection::Up);
+                plane.snake[0] = plane.food.clone();
+
+                assert_that!(plane.head_on_food(), is(equal_to(true)));
+            }
+
+            #[test]
+            fn it_returns_false_when_snake_head_coordinates_match_food_coordinates() {
+                let mut plane = Plane::new(20, 20);
+                plane.food = Cell::new(5, 5, MovementDirection::Up);
+                plane.snake[0] = Cell::new(0, 0, MovementDirection::Up);
+
+                assert_that!(plane.head_on_food(), is(equal_to(false)));
             }
         }
     }
