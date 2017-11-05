@@ -74,9 +74,7 @@ impl Plane {
         };
         self.snake[0].direction = direction.clone();
         if self.head_on_food() {
-            self.food.direction = self.snake[0].direction.clone();
-            self.snake.push(self.food.clone());
-            self.randomize_food();
+            self.eat_food();
         }
     }
 
@@ -91,6 +89,11 @@ impl Plane {
                 .map(|cell| (cell.x, cell.y))
                 .any(|coords| coords == (self.food.x, self.food.y));
         }
+    }
+
+    fn eat_food(&mut self) {
+        self.snake.push(self.food.clone());
+        self.randomize_food();
     }
 
     /// Tests snake head and food collision.
@@ -244,6 +247,22 @@ mod tests {
                 plane.snake[0] = Cell::new(0, 0, MovementDirection::Up);
 
                 assert_that!(plane.head_on_food(), is(equal_to(false)));
+            }
+        }
+
+        mod eat_food {
+            use super::*;
+
+            #[test]
+            fn it_appends_food_to_snake_body() {
+                let mut plane = Plane::new(20, 20);
+                plane.food = Cell::new(5, 6, MovementDirection::Up);
+
+                plane.eat_food();
+
+                let last_part = unwrap!(plane.snake.last());
+                assert_that!(last_part.x, is(equal_to(5)));
+                assert_that!(last_part.y, is(equal_to(6)));
             }
         }
     }
