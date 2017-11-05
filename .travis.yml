@@ -2,7 +2,7 @@ language: rust
 
 rust:
   - stable
-  - nightly
+  - nightly-2017-10-22
 
 cache: cargo
 
