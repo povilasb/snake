@@ -8,7 +8,11 @@ rust:
 cache: cargo
 
 before_script:
+  - sudo apt-get install -y cmake g++ pkg-config libcurl4-openssl-dev libdw-dev
+    binutils-dev libiberty-dev
   - cargo install rustfmt --vers 0.9.0 --force
+  - cargo install cargo-kcov --vers 0.4.2 --force
+  - cargo kcov --print-install-kcov-sh | sh
   - if [ "${TRAVIS_RUST_VERSION}" = nightly-2017-10-22 ]; then
       (
         set -x;
@@ -19,7 +23,8 @@ before_script:
 script:
   - cargo fmt -- --write-mode=diff
   - cargo build --verbose
-  - cargo test --verbose
+  - cargo kcov --verbose
+  - cargo kcov --coveralls --verbose
   - if [ "${TRAVIS_RUST_VERSION}" = nightly-2017-10-22 ]; then
       (
         set -x;
