@@ -2,16 +2,27 @@ language: rust
 
 rust:
   - stable
+  - nightly
   - nightly-2017-10-22
 
 cache: cargo
 
 before_script:
   - cargo install rustfmt --vers 0.9.0 --force
-  - cargo install clippy --vers 0.0.166 --force
+  - if [ "${TRAVIS_RUST_VERSION}" = nightly-2017-10-22 ]; then
+      (
+        set -x;
+        cargo install clippy --vers 0.0.166 --force
+      );
+    fi
 
 script:
   - cargo fmt -- --write-mode=diff
   - cargo build --verbose
   - cargo test --verbose
-  - cargo clippy --profile=test
+  - if [ "${TRAVIS_RUST_VERSION}" = nightly-2017-10-22 ]; then
+      (
+        set -x;
+        cargo clippy --profile=test
+      );
+    fi
