@@ -34,6 +34,9 @@ class Cell:
 class Game:
     def __init__(self, grid_size: tuple[int, int]):
         self.grid_width, self.grid_height = grid_size
+        self.reset()
+
+    def reset(self) -> None:
         self.direction: Direction = "right"
         self.is_over = False
 

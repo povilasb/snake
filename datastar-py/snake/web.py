@@ -71,6 +71,8 @@ async def main_page():
 
 @app.get("/on-load")
 async def on_load(signals: ReadSignals):
+    if _GAME.is_over:
+        _GAME.reset()
     return DatastarResponse(_stream_game_updates())
 
 
