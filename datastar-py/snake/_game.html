@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Snake Game</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+        <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.5/bundles/datastar.js"></script>
+        <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+        <style>
+            body {
+                font-family: 'Silkscreen', monospace;
+            }
+            svg#grid {
+                border: 2px solid #c4c9cf;
+            }
+        </style>
+    </head>
+
+    <body data-on-load="@get('/on-load')" data-signals="{key_pressed: null}">
+        <div data-on-keydown__window="$key_pressed = evt.key; @post('/key-down')"></div>
+        <svg id="grid" width="100%" height="100%"></svg>
+        <button
+            class="px-6 py-3 m-2 text-xl font-bold text-green-600 border-2 border-green-600 hover:text-green-700 hover:border-green-700"
+            data-on-click="@get('/new-game')"
+        >
+            NEW GAME
+        </button>
+    </body>
+</html>
