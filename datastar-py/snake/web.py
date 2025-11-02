@@ -54,7 +54,7 @@ class _RenderHtml:
     def _render_cell(self, cell: Cell) -> str:
         match cell.state:
             case "food":
-                color = "#b3e5fc"  # light blue
+                return self._render_food(cell)
             case "head":
                 color = "yellow"
             case "body":
@@ -65,6 +65,48 @@ class _RenderHtml:
         return f'''<rect
             x="{cell.coord.x * self._cell_width_px}" y="{cell.coord.y * self._cell_height_px}"
             width="{self._cell_width_px}" height="{self._cell_height_px}" fill="{color}"
+        />
+        '''
+
+    def _render_food(self, cell: Cell) -> str:
+        color = "#b3e5fc"  # light blue
+        width_px = self._cell_width_px / 3
+        height_px = self._cell_height_px / 3
+
+        rect_left_mid = self._rect(
+            cell.coord.x * self._cell_width_px,
+            cell.coord.y * self._cell_height_px + height_px,
+            width_px,
+            height_px,
+            color=color,
+        )
+        rect_mid_top = self._rect(
+            cell.coord.x * self._cell_width_px + width_px,
+            cell.coord.y * self._cell_height_px,
+            width_px,
+            height_px,
+            color=color,
+        )
+        rect_mid_bottom = self._rect(
+            cell.coord.x * self._cell_width_px + width_px,
+            cell.coord.y * self._cell_height_px + height_px * 2,
+            width_px,
+            height_px,
+            color=color,
+        )
+        rect_right_mid = self._rect(
+            cell.coord.x * self._cell_width_px + width_px * 2,
+            cell.coord.y * self._cell_height_px + height_px,
+            width_px,
+            height_px,
+            color=color,
+        )
+        return f"<g>{rect_left_mid}{rect_mid_top}{rect_mid_bottom}{rect_right_mid}</g>"
+
+    def _rect(self, x: int, y: int, width: int, height: int, color: str) -> str:
+        return f'''<rect
+            x="{x}" y="{y}"
+            width="{width}" height="{height}" fill="{color}"
         />
         '''
 
