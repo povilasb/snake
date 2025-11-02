@@ -53,7 +53,7 @@ class Game:
                 head = self._snake[0].right()
 
         self._move_body(head)
-        self.is_over = self._is_game_over()
+        self.is_over = head in self._snake[1:]
         self._maybe_eat_food()
 
     def curr_state(self) -> list[Cell]:
@@ -93,6 +93,3 @@ class Game:
         if self._snake[0] == self._food:
             self._snake.append(self._food)
             self._food = self._place_food()
-
-    def _is_game_over(self) -> bool:
-        return self._snake[0] in self._snake[1:]
