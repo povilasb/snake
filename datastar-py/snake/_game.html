@@ -20,6 +20,10 @@
 
     <body data-on-load="@get('/on-load')" data-signals="{key_pressed: null}">
         <div data-on-keydown__window="$key_pressed = evt.key; @post('/key-down')"></div>
+        <div class="flex items-center m-2 space-x-4 text-xl font-bold">
+            <span class="text-gray-700">Score:</span>
+            <span id="score">0</span>
+        </div>
         <svg id="grid" width="100%" height="100%"></svg>
         <button
             class="px-6 py-3 m-2 text-xl font-bold text-green-600 border-2 border-green-600 hover:text-green-700 hover:border-green-700"

@@ -29,6 +29,9 @@ class _RenderHtml:
         self._cell_height_px = 20
 
     def render_html(self) -> str:
+        return self._render_grid() + self._render_score()
+
+    def _render_grid(self) -> str:
         grid_width_px = self._game.grid_width * self._cell_width_px
         grid_height_px = self._game.grid_height * self._cell_height_px
 
@@ -44,6 +47,9 @@ class _RenderHtml:
             {"".join(self._render_cell(cell) for cell in self._game.curr_state())}
         </svg>
         """
+
+    def _render_score(self) -> str:
+        return f"<span id='score'>{self._game.score}</span>"
 
     def _render_cell(self, cell: Cell) -> str:
         match cell.state:

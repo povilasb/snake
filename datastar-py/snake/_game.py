@@ -35,6 +35,7 @@ class Game:
     def __init__(self, grid_size: tuple[int, int]):
         self.grid_width, self.grid_height = grid_size
         self.reset()
+        self.score = 0
 
     def reset(self) -> None:
         self.direction: Direction = "right"
@@ -94,5 +95,6 @@ class Game:
 
     def _maybe_eat_food(self) -> None:
         if self._snake[0] == self._food:
+            self.score += 1
             self._snake.append(self._food)
             self._food = self._place_food()
