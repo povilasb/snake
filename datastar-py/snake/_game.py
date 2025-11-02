@@ -7,9 +7,6 @@ Grid = t.NewType("Grid", list[list[CellState]])
 Direction: t.TypeAlias = t.Literal["up", "down", "left", "right"]
 
 
-class GameOver: ...
-
-
 @dataclass
 class Coord:
     x: int
@@ -38,13 +35,13 @@ class Game:
     def __init__(self, grid_size: tuple[int, int]):
         self.grid_width, self.grid_height = grid_size
         self.direction: Direction = "right"
+        self.is_over = False
 
         head = Coord(x=self.grid_width // 2, y=self.grid_height // 2)
         self._snake = [head, head.left(), head.left().left()]
         self._food = self._place_food()
-        self._game_over = False
 
-    def tick(self) -> GameOver | None:
+    def tick(self) -> None:
         match self.direction:
             case "up":
                 head = self._snake[0].up()
@@ -56,17 +53,11 @@ class Game:
                 head = self._snake[0].right()
 
         self._move_body(head)
-        self._game_over = self._is_game_over()
-        if self._game_over:
-            return GameOver()
-
+        self.is_over = self._is_game_over()
         self._maybe_eat_food()
 
-    def curr_state(self) -> list[Cell] | GameOver:
+    def curr_state(self) -> list[Cell]:
         """The current state of a grid that has food and snake in it."""
-        if self._game_over:
-            return GameOver()
-
         return [
             Cell(state="food", coord=self._food),
             Cell(state="head", coord=self._snake[0]),

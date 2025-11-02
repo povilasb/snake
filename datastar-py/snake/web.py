@@ -13,7 +13,7 @@ from datastar_py.fastapi import (
 )
 from datastar_py.sse import DatastarEvent
 
-from snake._game import Game, Cell, GameOver
+from snake._game import Game, Cell
 
 app = FastAPI()
 _GAME = Game(grid_size=(30, 20))
@@ -32,7 +32,7 @@ class _RenderHtml:
         grid_width_px = self._game.grid_width * self._cell_width_px
         grid_height_px = self._game.grid_height * self._cell_height_px
 
-        if isinstance(self._game.curr_state(), GameOver):
+        if self._game.is_over:
             return f"""
             <svg id="grid" width="{grid_width_px}px" height="{grid_height_px}px" style="background-color: white;">
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="20px" fill="black">Game Over</text>
@@ -91,13 +91,10 @@ async def key_down(signals: ReadSignals):
 
 async def _stream_game_updates() -> t.AsyncGenerator[DatastarEvent]:
     render_html = _RenderHtml(_GAME)
-    while True:
+    while not _GAME.is_over:
+        _GAME.tick()
         yield ServerSentEventGenerator.patch_elements(render_html.render_html())
         await asyncio.sleep(0.1)
-        state = _GAME.tick()
-        if isinstance(state, GameOver):
-            yield ServerSentEventGenerator.patch_elements(render_html.render_html())
-            break
 
 
 if __name__ == "__main__":
