@@ -40,6 +40,7 @@ class Game:
     def reset(self) -> None:
         self.direction: Direction = "right"
         self.is_over = False
+        self.score = 0
 
         head = Coord(x=self.grid_width // 2, y=self.grid_height // 2)
         self._snake = [head, head.left(), head.left().left()]

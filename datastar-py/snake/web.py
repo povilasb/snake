@@ -18,7 +18,6 @@ from snake._game import Game, Cell
 app = FastAPI()
 _GAME = Game(grid_size=(30, 20))
 
-# TODO: try patching only the signals: food and snake body
 # TODO: dark theme
 
 
