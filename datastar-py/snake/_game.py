@@ -35,7 +35,6 @@ class Game:
     def __init__(self, grid_size: tuple[int, int]):
         self.grid_width, self.grid_height = grid_size
         self.reset()
-        self.score = 0
 
     def reset(self) -> None:
         self.direction: Direction = "right"
